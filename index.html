@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>slides</title>
+    <style>
+        .slides {
+            height: 400px;
+            background: fuchsia;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .view {
+            height: 100%;
+            display: flex;
+            background: firebrick;
+            overflow: visible;
+        }
+
+        .slide {
+            float: left;
+            width: 100%;
+            box-sizing: border-box;
+            height: 100%;
+            background: red;
+            border: 1px solid;
+            flex-shrink: 0;
+        }
+
+        .p-slides-ol {
+            position: absolute;
+            bottom: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="slides">
+        <div class="view">
+            <div class="slide">1</div>
+            <div class="slide">2</div>
+            <div class="slide">3</div>
+        </div>
+    </div>
+
+    <script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script>
+        window.slides = function (element) {
+            let $el = $(element)
+            let width = $el.width()
+            let count = $el.find('.slide').length
+            let $view = $el.children('.view')
+
+            let $ol = $('<ol class="p-slides-ol"></ol>')
+            for (let i = 0; i < count; i++) {
+                $ol.append(`<li class="">${i + 1}</li>`)
+            }
+            $el.append($ol)
+            $ol.on('click','li',(e)=>{
+                let $li = $(e.currentTarget)
+                let index = $li.index()
+                let slideWidth = - width * index
+                $view.css({
+                    transition:'transform 1s',
+                    transform:`translateX(${slideWidth}px)`
+                })
+            })
+        }
+
+
+        slides(document.querySelector('.slides'))
+    </script>
+</body>
+
+</html>
