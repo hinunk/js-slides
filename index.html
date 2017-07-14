@@ -9,7 +9,6 @@
     <style>
         .slides {
             height: 400px;
-            background: fuchsia;
             overflow: hidden;
             position: relative;
         }
@@ -17,7 +16,6 @@
         .view {
             height: 100%;
             display: flex;
-            background: firebrick;
             overflow: visible;
         }
 
@@ -26,9 +24,12 @@
             width: 100%;
             box-sizing: border-box;
             height: 100%;
-            background: red;
             border: 1px solid;
             flex-shrink: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 50px;
         }
 
         .p-slides-ol {
@@ -41,9 +42,9 @@
 <body>
     <div class="slides">
         <div class="view">
-            <div class="slide">1</div>
-            <div class="slide">2</div>
-            <div class="slide">3</div>
+            <div class="slide">我是1图</div>
+            <div class="slide">我是2图</div>
+            <div class="slide">我是3图</div>
         </div>
     </div>
 
@@ -54,21 +55,46 @@
             let width = $el.width()
             let count = $el.find('.slide').length
             let $view = $el.children('.view')
+            let currentIndex = 0
+            let timer
 
             let $ol = $('<ol class="p-slides-ol"></ol>')
             for (let i = 0; i < count; i++) {
                 $ol.append(`<li class="">${i + 1}</li>`)
             }
             $el.append($ol)
-            $ol.on('click','li',(e)=>{
+            $ol.on('click', 'li', (e) => {
                 let $li = $(e.currentTarget)
                 let index = $li.index()
+                goToSlide(index)
+            })
+            $view.on('mouseenter', () => {
+                clearInterval(timer)
+            })
+            $view.on('mouseleave', () => {
+                autoSlide()
+            })
+            function goToSlide(index) {
+                if (index < 0) {
+                    index = count - 1
+                } else if (index >= count) {
+                    index = 0
+                }else if(index === 0){
+                    
+                }
                 let slideWidth = - width * index
                 $view.css({
-                    transition:'transform 1s',
-                    transform:`translateX(${slideWidth}px)`
+                    transition: 'transform 1s',
+                    transform: `translateX(${slideWidth}px)`
                 })
-            })
+                currentIndex = index
+            }
+            function autoSlide() {
+                timer = setInterval(function () {
+                    goToSlide(currentIndex + 1)
+                }, 1500)
+            }
+            autoSlide()
         }
 
 
